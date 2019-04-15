@@ -1,0 +1,18 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: riptides-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "riptides-static-ip"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /*
+        backend:
+          serviceName: riptides-ui-service
+          servicePort: 80
+      - path: /api/*
+        backend:
+          serviceName: riptides-api-service
+          servicePort: 80

@@ -1,0 +1,45 @@
+---
+apiVersion: "extensions/v1beta1"
+kind: "Deployment"
+metadata:
+  name: "riptides-ui"
+  namespace: "default"
+  labels:
+    app: "riptides-ui"
+    microservice: "riptides"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "riptides-ui"
+      microservice: "riptides"
+  template:
+    metadata:
+      labels:
+        app: "riptides-ui"
+        microservice: "riptides"
+    spec:
+      containers:
+        - name: "ui-sha256"
+          image: "eu.gcr.io/riptides/ui@sha256:0a464aa17eccb6250cd07e9086278b0b67d63cbc504325f6cfeb0acd6892c0f2"
+---
+apiVersion: "autoscaling/v2beta1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "riptides-ui-hpa"
+  namespace: "default"
+  labels:
+    app: "riptides-ui"
+    microservice: "riptides"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "riptides-ui"
+    apiVersion: "apps/v1beta1"
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: "Resource"
+      resource:
+        name: "cpu"
+        targetAverageUtilization: 30

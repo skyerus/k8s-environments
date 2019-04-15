@@ -1,0 +1,1 @@
+kubectl expose deployment riptides-ui --target-port=80 --type=NodePort --name=riptides-service

@@ -1,0 +1,94 @@
+---
+apiVersion: "extensions/v1beta1"
+kind: "Deployment"
+metadata:
+  name: "riptides-api"
+  namespace: "default"
+  labels:
+    app: "riptides-api"
+    microservice: "riptides"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "riptides-api"
+      microservice: "riptides"
+  template:
+    metadata:
+      labels:
+        app: "riptides-api"
+        microservice: "riptides"
+    spec:
+      containers:
+        - name: "api-sha256"
+          image: "eu.gcr.io/riptides/api@sha256:81f68b404fb8ed6f10958b8aa23fc0e34ee7bcf13c232142258e87c83d03968b"
+          env:
+            - name: DB_HOST
+              value: 127.0.0.1:3306
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: riptides-mysql-user-skye
+                  key: user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: riptides-mysql-user-skye
+                  key: password
+            - name: DB_NAME
+              value: riptides
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/bash", "-c", "php bin/console doctrine:migrations:migrate -n"]
+          volumeMounts:
+            - name: keys
+              mountPath: "/app/config/jwt"
+              readOnly: true
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          command: ["/cloud_sql_proxy",
+                    "-instances=riptides:europe-west4:riptides-sql=tcp:3306",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          # [START cloudsql_security_context]
+          securityContext:
+            runAsUser: 2  # non-root user
+            allowPrivilegeEscalation: false
+          # [END cloudsql_security_context]
+          volumeMounts:
+            - name: riptides-mysql-service-account
+              mountPath: /secrets/cloudsql
+              readOnly: true
+      volumes:
+        - name: keys
+          secret:
+            secretName: riptides-api-keys
+            items:
+            - key: private.pem
+              path: private.pem
+            - key: public.pem
+              path: public.pem
+        - name: riptides-mysql-service-account
+          secret:
+            secretName: riptides-mysql-service-account
+---
+apiVersion: "autoscaling/v2beta1"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "riptides-api-hpa"
+  namespace: "default"
+  labels:
+    app: "riptides-api"
+    microservice: "riptides"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "riptides-api"
+    apiVersion: "apps/v1beta1"
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: "Resource"
+      resource:
+        name: "cpu"
+        targetAverageUtilization: 70
