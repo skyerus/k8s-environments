@@ -21,10 +21,10 @@ spec:
     spec:
       containers:
         - name: "api-sha256"
-          image: "eu.gcr.io/riptides/api@sha256:81f68b404fb8ed6f10958b8aa23fc0e34ee7bcf13c232142258e87c83d03968b"
+          image: "eu.gcr.io/riptides/api@sha256:ce0ead9d1dd04d7bfc129998eca6efb58cb779f4f3e41dcc3681c9aac1156867"
           env:
             - name: DB_HOST
-              value: 127.0.0.1:3306
+              value: 10.35.240.3
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
@@ -45,20 +45,6 @@ spec:
             - name: keys
               mountPath: "/app/config/jwt"
               readOnly: true
-        - name: cloudsql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:1.11
-          command: ["/cloud_sql_proxy",
-                    "-instances=riptides:europe-west4:riptides-sql=tcp:3306",
-                    "-credential_file=/secrets/cloudsql/credentials.json"]
-          # [START cloudsql_security_context]
-          securityContext:
-            runAsUser: 2  # non-root user
-            allowPrivilegeEscalation: false
-          # [END cloudsql_security_context]
-          volumeMounts:
-            - name: riptides-mysql-service-account
-              mountPath: /secrets/cloudsql
-              readOnly: true
       volumes:
         - name: keys
           secret:
@@ -68,9 +54,6 @@ spec:
               path: private.pem
             - key: public.pem
               path: public.pem
-        - name: riptides-mysql-service-account
-          secret:
-            secretName: riptides-mysql-service-account
 ---
 apiVersion: "autoscaling/v2beta1"
 kind: "HorizontalPodAutoscaler"
@@ -91,4 +74,4 @@ spec:
     - type: "Resource"
       resource:
         name: "cpu"
-        targetAverageUtilization: 70
+        targetAverageUtilization: 80
