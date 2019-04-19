@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: "ui-sha256"
-          image: "eu.gcr.io/riptides/ui@sha256:0a464aa17eccb6250cd07e9086278b0b67d63cbc504325f6cfeb0acd6892c0f2"
+          image: "eu.gcr.io/riptides/ui@sha256:ca31ee9bfa27ae2b9b297e6aab918b29cdba50c7ebed50d1bba4760c61cd92bb"
 ---
 apiVersion: "autoscaling/v2beta1"
 kind: "HorizontalPodAutoscaler"

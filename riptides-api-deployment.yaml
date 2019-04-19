@@ -21,8 +21,10 @@ spec:
     spec:
       containers:
         - name: "api-sha256"
-          image: "eu.gcr.io/riptides/api@sha256:ce0ead9d1dd04d7bfc129998eca6efb58cb779f4f3e41dcc3681c9aac1156867"
+          image: "eu.gcr.io/riptides/api@sha256:0708f2d2d32b1d30bf4ed3d7bcd96239b88144728237f01d44d93bbbc9b7b12e"
           env:
+            - name: APP_ENV
+              value: prod
             - name: DB_HOST
               value: 10.35.240.3
             - name: DB_USER
@@ -37,6 +39,17 @@ spec:
                   key: password
             - name: DB_NAME
               value: riptides
+            - name: JWT_MY_SECRET_KEY
+              value: /app/config/jwt/private.pem
+            - name: JWT_MY_PUBLIC_KEY
+              value: /app/config/jwt/public.pem
+            - name: JWT_MY_PASSPHRASE
+              valueFrom:
+                secretKeyRef:
+                  name: riptides-api-keys-secret
+                  key: password
+            - name: APP_SECRET
+              value: 7e3ece4540f94b5d8919e1d91a2d846f
           lifecycle:
             postStart:
               exec:
@@ -44,7 +57,6 @@ spec:
           volumeMounts:
             - name: keys
               mountPath: "/app/config/jwt"
-              readOnly: true
       volumes:
         - name: keys
           secret:
