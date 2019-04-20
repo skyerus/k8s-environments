@@ -16,3 +16,7 @@ spec:
         backend:
           serviceName: riptides-api-service
           servicePort: 80
+      - path: /socket/*
+        backend:
+          serviceName: chat-socket-service
+          servicePort: 80

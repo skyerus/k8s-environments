@@ -2,83 +2,77 @@
 apiVersion: "extensions/v1beta1"
 kind: "Deployment"
 metadata:
-  name: "riptides-api"
+  name: "chat-socket"
   namespace: "default"
   labels:
-    app: "riptides-api"
+    app: "chat-socket"
     microservice: "riptides"
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: "riptides-api"
+      app: "chat-socket"
       microservice: "riptides"
   template:
     metadata:
       labels:
-        app: "riptides-api"
+        app: "chat-socket"
         microservice: "riptides"
     spec:
       containers:
-        - name: "api-sha256"
-          image: "eu.gcr.io/riptides/api@sha256:0708f2d2d32b1d30bf4ed3d7bcd96239b88144728237f01d44d93bbbc9b7b12e"
+        - name: "chat-socket-sha256"
+          image: "eu.gcr.io/riptides/chat-socket@sha256:27c07badae673ef1d7fa6081875889391252fd273bbc4c9bc984afa00032e275"
           env:
-            - name: APP_ENV
-              value: prod
-            - name: DB_HOST
+            - name: MYSQL_HOST
               value: 10.35.240.3
-            - name: DB_USER
+            - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:
                   name: riptides-mysql-user-skye
                   key: user
-            - name: DB_PASSWORD
+            - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: riptides-mysql-user-skye
                   key: password
-            - name: DB_NAME
+            - name: MYSQL_DATABASE
               value: riptides
-            - name: JWT_MY_SECRET_KEY
-              value: /app/config/jwt/private.pem
-            - name: JWT_MY_PUBLIC_KEY
-              value: /app/config/jwt/public.pem
-            - name: JWT_MY_PASSPHRASE
+            - name: REDIS_HOST
+              value: 10.0.14.156
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: riptides-api-keys-secret
+                  name: redis-secret
                   key: password
-            - name: APP_SECRET
-              value: 7e3ece4540f94b5d8919e1d91a2d846f
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/bin/bash", "-c", "php bin/console doctrine:migrations:migrate -n"]
+            - name: RIPTIDES_API_HOST
+              value: http://10.0.0.213
+            - name: RIPTIDES_HOST
+              value: http://riptides.io
           volumeMounts:
             - name: keys
-              mountPath: "/app/config/jwt"
+              mountPath: "/app/key"
       volumes:
         - name: keys
           secret:
             secretName: riptides-api-keys
             items:
-            - key: private.pem
-              path: private.pem
-            - key: public.pem
-              path: public.pem
+              - key: public.pem
+                path: public.pem
 ---
 apiVersion: "autoscaling/v2beta1"
 kind: "HorizontalPodAutoscaler"
 metadata:
-  name: "riptides-api-hpa"
+  name: "chat-socket-hpa"
   namespace: "default"
   labels:
-    app: "riptides-api"
+    app: "chat-socket"
     microservice: "riptides"
 spec:
   scaleTargetRef:
     kind: "Deployment"
-    name: "riptides-api"
+    name: "chat-socket"
     apiVersion: "apps/v1beta1"
   minReplicas: 1
   maxReplicas: 5

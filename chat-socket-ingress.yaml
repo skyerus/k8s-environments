@@ -1,0 +1,14 @@
+#apiVersion: extensions/v1beta1
+#kind: Ingress
+#metadata:
+#  name: chat-socket-ingress
+#  annotations:
+#    kubernetes.io/ingress.global-static-ip-name: "chat-socket-static-ip"
+#spec:
+#  rules:
+#  - http:
+#      paths:
+#      - path: /*
+#        backend:
+#          serviceName: chat-socket-service
+#          servicePort: 80

@@ -21,7 +21,10 @@ spec:
     spec:
       containers:
         - name: "ui-sha256"
-          image: "eu.gcr.io/riptides/ui@sha256:ca31ee9bfa27ae2b9b297e6aab918b29cdba50c7ebed50d1bba4760c61cd92bb"
+          image: "eu.gcr.io/riptides/ui@sha256:10e48d63de14366b2598bcb1f760b134bb004362e865bd410ea2985155567d97"
+          env:
+            - name: CHAT_SOCKET_URL
+              value: http://35.204.54.160:80
 ---
 apiVersion: "autoscaling/v2beta1"
 kind: "HorizontalPodAutoscaler"
