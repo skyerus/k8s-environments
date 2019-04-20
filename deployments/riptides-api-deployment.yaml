@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: "api-sha256"
-          image: "eu.gcr.io/riptides/api@sha256:0708f2d2d32b1d30bf4ed3d7bcd96239b88144728237f01d44d93bbbc9b7b12e"
+          image: "eu.gcr.io/riptides/api@sha256:50521e84a013b0a34795738d4ede363ad0ceabeeae907a4d578036cffe575627"
           env:
             - name: DB_HOST
               value: 10.35.240.3
@@ -48,6 +48,18 @@ spec:
                   key: password
             - name: APP_SECRET
               value: 7e3ece4540f94b5d8919e1d91a2d846f
+            - name: SPOTIFY_REDIRECT_URI
+              value: http://riptides.io/settings
+            - name: SPOTIFY_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: spotify-creds-secret
+                  key: client_id
+            - name: SPOTIFY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: spotify-creds-secret
+                  key: client_secret
           lifecycle:
             postStart:
               exec:

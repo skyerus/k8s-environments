@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: "ui-sha256"
-          image: "eu.gcr.io/riptides/ui@sha256:10e48d63de14366b2598bcb1f760b134bb004362e865bd410ea2985155567d97"
+          image: "eu.gcr.io/riptides/ui@sha256:f7ff08e622e4cf306c6784ac7b7216b15a15f5ee0ef46d85b06f4d40a6e7e9c1"
           env:
             - name: CHAT_SOCKET_URL
               value: http://35.204.54.160:80
