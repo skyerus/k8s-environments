@@ -6,7 +6,6 @@ metadata:
     microservice: riptides
   name: chat-socket-service
   namespace: default
-  session_affinity: true
   annotations:
     beta.cloud.google.com/backend-config: '{"ports": {"80":"chat-socket"}}'
 spec:
@@ -16,5 +15,5 @@ spec:
     targetPort: 80
   selector:
     app: chat-socket
-  sessionAffinity: None
+  sessionAffinity: ClientIP
   type: NodePort

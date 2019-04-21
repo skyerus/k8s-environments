@@ -3,6 +3,6 @@ kind: BackendConfig
 metadata:
   name: chat-socket
 spec:
-  timeoutSec: 1800
+  timeoutSec: 7200
   connectionDraining:
     drainingTimeoutSec: 60

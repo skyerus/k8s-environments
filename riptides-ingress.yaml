@@ -4,6 +4,7 @@ metadata:
   name: riptides-ingress
   annotations:
     kubernetes.io/ingress.global-static-ip-name: "riptides-static-ip"
+    networking.gke.io/managed-certificates: riptides-certificate
 spec:
   rules:
   - http:
