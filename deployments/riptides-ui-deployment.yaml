@@ -21,12 +21,7 @@ spec:
     spec:
       containers:
         - name: "ui-sha256"
-          image: "eu.gcr.io/riptides/ui@sha256:4bcba956d12373164cb6935efd287f9f0b877901eab663a95e299700a6ba2228"
-          env:
-            - name: API_URL
-              value: https://riptides.io
-            - name: CHAT_SOCKET_URL
-              value: https://riptides.io
+          image: "eu.gcr.io/riptides/ui@sha256:6614e662f770cc59c46d925dcfad08a322ca1005d112b3bc68ab73d420ddf173"
           livenessProbe:
             httpGet:
               path: /healthcheck
@@ -44,10 +39,6 @@ spec:
           ports:
             - name: riptides-ui
               containerPort: 80
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/bin/bash", "-c", "npm build"]
 ---
 apiVersion: "autoscaling/v2beta1"
 kind: "HorizontalPodAutoscaler"

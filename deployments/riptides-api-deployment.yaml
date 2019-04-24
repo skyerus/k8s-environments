@@ -8,7 +8,7 @@ metadata:
     app: "riptides-api"
     microservice: "riptides"
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: "riptides-api"
@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: "api-sha256"
-          image: "eu.gcr.io/riptides/api@sha256:50521e84a013b0a34795738d4ede363ad0ceabeeae907a4d578036cffe575627"
+          image: "eu.gcr.io/riptides/api@sha256:c901a0416ff3c0a66984b70045dc2dafd4f34f22f105d0b801ff8e66f4e2a7d7"
           env:
             - name: DB_HOST
               value: 10.35.240.3
@@ -49,7 +49,7 @@ spec:
             - name: APP_SECRET
               value: 7e3ece4540f94b5d8919e1d91a2d846f
             - name: SPOTIFY_REDIRECT_URI
-              value: http://riptides.io/settings
+              value: https://riptides.io/settings
             - name: SPOTIFY_CLIENT_ID
               valueFrom:
                 secretKeyRef:
@@ -60,13 +60,24 @@ spec:
                 secretKeyRef:
                   name: spotify-creds-secret
                   key: client_secret
+            - name: REDIS_HOST
+              value: 10.0.14.156
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: password
           lifecycle:
             postStart:
               exec:
                 command: ["/bin/bash", "-c", "php bin/console doctrine:migrations:migrate -n"]
           volumeMounts:
             - name: keys
-              mountPath: "/app/config/jwt"
+              mountPath: /app/config/jwt
+            - name: google
+              mountPath: /app/config/google
       volumes:
         - name: keys
           secret:
@@ -76,6 +87,12 @@ spec:
               path: private.pem
             - key: public.pem
               path: public.pem
+        - name: google
+          secret:
+            secretName: storage-service-credentials
+            items:
+            - key: google.json
+              path: google.json
 ---
 apiVersion: "autoscaling/v2beta1"
 kind: "HorizontalPodAutoscaler"

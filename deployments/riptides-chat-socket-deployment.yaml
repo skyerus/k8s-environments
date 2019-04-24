@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: "chat-socket-sha256"
-          image: "eu.gcr.io/riptides/chat-socket@sha256:b4361de3174231b15c8d8584b6119a7a9339d73b4242951025cfe695e0cbf8a8"
+          image: "eu.gcr.io/riptides/chat-socket@sha256:08a1bf4f751d9bcb9d2b378f34d1a4a4688c9085fead6310c71fe0fcf9ffe7ed"
           env:
             - name: MYSQL_HOST
               value: 10.35.240.3
