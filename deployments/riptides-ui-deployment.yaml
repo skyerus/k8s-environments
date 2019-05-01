@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: "ui-sha256"
-          image: "eu.gcr.io/riptides/ui@sha256:6614e662f770cc59c46d925dcfad08a322ca1005d112b3bc68ab73d420ddf173"
+          image: "eu.gcr.io/riptides/ui@sha256:af5198d14720e45f3a44241753f399d57e30f45cbf5c003014fae17622650336"
           livenessProbe:
             httpGet:
               path: /healthcheck

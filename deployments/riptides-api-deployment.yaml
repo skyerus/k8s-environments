@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: "api-sha256"
-          image: "eu.gcr.io/riptides/api@sha256:c901a0416ff3c0a66984b70045dc2dafd4f34f22f105d0b801ff8e66f4e2a7d7"
+          image: "eu.gcr.io/riptides/api@sha256:08921171b2b56dd9aa1210628505057b64581c49e5a58ab431f1b25793d66ec6"
           env:
             - name: DB_HOST
               value: 10.35.240.3
@@ -69,6 +69,8 @@ spec:
                 secretKeyRef:
                   name: redis-secret
                   key: password
+            - name: CHAT_SOCKET_URL
+              value: https://riptides.io
           lifecycle:
             postStart:
               exec:
