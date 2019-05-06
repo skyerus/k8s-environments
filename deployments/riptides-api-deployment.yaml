@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: "api-sha256"
-          image: "eu.gcr.io/riptides/api@sha256:08921171b2b56dd9aa1210628505057b64581c49e5a58ab431f1b25793d66ec6"
+          image: "eu.gcr.io/riptides/api@sha256:0277b4091627c643c847637d3732ab499fa3f93cc2a5f3230e2e9377c9509980"
           env:
             - name: DB_HOST
               value: 10.35.240.3
@@ -70,7 +70,9 @@ spec:
                   name: redis-secret
                   key: password
             - name: CHAT_SOCKET_URL
-              value: https://riptides.io
+              value: http://10.0.5.56
+            - name: APP_ENV
+              value: production
           lifecycle:
             postStart:
               exec:
@@ -80,6 +82,8 @@ spec:
               mountPath: /app/config/jwt
             - name: google
               mountPath: /app/config/google
+        - name: "nginx-api-sha256"
+          image: "eu.gcr.io/riptides/nginx-api@sha256:00ce56ff9cd5a97cc3621b0b38fe02157b79c74eaf16248f68774f24cecef3cb"
       volumes:
         - name: keys
           secret:
