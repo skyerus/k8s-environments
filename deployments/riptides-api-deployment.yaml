@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: "api-sha256"
-          image: "eu.gcr.io/riptides/api@sha256:d9c30d3bf63ff0da27596116c7bdc52972dbacc7d122a66575b057d461c5c82a"
+          image: "eu.gcr.io/riptides/api@sha256:212b0f68e44726dbe265ca0485a701453b2249cf7b8ec11c91a3234a5e583ef9"
           env:
             - name: DB_HOST
               value: 10.35.240.3
@@ -73,6 +73,13 @@ spec:
               value: http://10.0.5.56
             - name: APP_ENV
               value: prod
+            - name: MAILGUN_DOMAIN
+              value: mg.riptides.io
+            - name: MAILGUN_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mailgun-secret
+                  key: key
           lifecycle:
             postStart:
               exec:
