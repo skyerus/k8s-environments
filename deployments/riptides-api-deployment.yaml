@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: "api-sha256"
-          image: "eu.gcr.io/riptides/api@sha256:0277b4091627c643c847637d3732ab499fa3f93cc2a5f3230e2e9377c9509980"
+          image: "eu.gcr.io/riptides/api@sha256:d9c30d3bf63ff0da27596116c7bdc52972dbacc7d122a66575b057d461c5c82a"
           env:
             - name: DB_HOST
               value: 10.35.240.3
@@ -72,11 +72,11 @@ spec:
             - name: CHAT_SOCKET_URL
               value: http://10.0.5.56
             - name: APP_ENV
-              value: production
+              value: prod
           lifecycle:
             postStart:
               exec:
-                command: ["/bin/bash", "-c", "php bin/console doctrine:migrations:migrate -n"]
+                command: ["/bin/bash", "-c", ". /app/deploy/deploy.sh"]
           volumeMounts:
             - name: keys
               mountPath: /app/config/jwt
