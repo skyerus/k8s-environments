@@ -6,22 +6,19 @@ metadata:
   namespace: "default"
   labels:
     app: "riptides-ui"
-    microservice: "riptides"
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: "riptides-ui"
-      microservice: "riptides"
   template:
     metadata:
       labels:
         app: "riptides-ui"
-        microservice: "riptides"
     spec:
       containers:
         - name: "ui-sha256"
-          image: "eu.gcr.io/riptides/ui@sha256:ea10a9bceb734fff23b897e9fd68da27b93f140abd83e0d2f94a5cdf8d750d2e"
+          image: "eu.gcr.io/riptides/ui@sha256:459abc37830302d0d175a890b43966567c03874e08f9872f6a1b47e6fc961993"
           livenessProbe:
             httpGet:
               path: /healthcheck

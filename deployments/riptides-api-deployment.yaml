@@ -6,13 +6,11 @@ metadata:
   namespace: "default"
   labels:
     app: "riptides-api"
-    microservice: "riptides"
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: "riptides-api"
-      microservice: "riptides"
   template:
     metadata:
       labels:
@@ -21,7 +19,7 @@ spec:
     spec:
       containers:
         - name: "api-sha256"
-          image: "eu.gcr.io/riptides/api@sha256:212b0f68e44726dbe265ca0485a701453b2249cf7b8ec11c91a3234a5e583ef9"
+          image: "eu.gcr.io/riptides/api@sha256:ab7a25fff805bfad172724b5d3f4b108f60c6f21cde62296950406d316dc9509"
           env:
             - name: DB_HOST
               value: 10.35.240.3
@@ -80,6 +78,8 @@ spec:
                 secretKeyRef:
                   name: mailgun-secret
                   key: key
+            - name: RIPTIDES_HOST
+              value: https://riptides.io
           lifecycle:
             postStart:
               exec:

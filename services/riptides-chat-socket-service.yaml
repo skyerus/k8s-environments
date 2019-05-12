@@ -2,8 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: chat-socket
-    microservice: riptides
+    microservice: riptides-chat
   name: chat-socket-service
   namespace: default
   annotations:

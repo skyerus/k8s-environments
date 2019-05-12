@@ -12,12 +12,10 @@ spec:
   selector:
     matchLabels:
       app: "chat-socket"
-      microservice: "riptides"
   template:
     metadata:
       labels:
         app: "chat-socket"
-        microservice: "riptides"
     spec:
       containers:
         - name: "chat-socket-sha256"
