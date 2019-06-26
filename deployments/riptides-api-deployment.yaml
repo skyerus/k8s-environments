@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: "api-sha256"
-          image: "eu.gcr.io/riptides/api@sha256:ab7a25fff805bfad172724b5d3f4b108f60c6f21cde62296950406d316dc9509"
+          image: "eu.gcr.io/riptides/api-go@sha256:416b3cd3612fb50f6bdab38f67f864ad385d8bce68269d1592e053e2b1d3c608"
           env:
             - name: DB_HOST
               value: 10.35.240.3
@@ -35,19 +35,10 @@ spec:
                   key: password
             - name: DB_NAME
               value: riptides
-            - name: JWT_MY_SECRET_KEY
-              value: /app/config/jwt/private.pem
-            - name: JWT_MY_PUBLIC_KEY
-              value: /app/config/jwt/public.pem
-            - name: JWT_MY_PASSPHRASE
-              valueFrom:
-                secretKeyRef:
-                  name: riptides-api-keys-secret
-                  key: password
-            - name: APP_SECRET
-              value: 7e3ece4540f94b5d8919e1d91a2d846f
             - name: SPOTIFY_REDIRECT_URI
               value: https://riptides.io/settings
+            - name: CORS_ALLOW_ORIGIN
+              value: https://riptides.io/
             - name: SPOTIFY_CLIENT_ID
               valueFrom:
                 secretKeyRef:
@@ -69,8 +60,6 @@ spec:
                   key: password
             - name: CHAT_SOCKET_URL
               value: http://10.0.5.56
-            - name: APP_ENV
-              value: prod
             - name: MAILGUN_DOMAIN
               value: mg.riptides.io
             - name: MAILGUN_API_KEY
@@ -80,26 +69,28 @@ spec:
                   key: key
             - name: RIPTIDES_HOST
               value: https://riptides.io
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/bin/bash", "-c", ". /app/deploy/deploy.sh"]
+            - name: GOOGLE_JSON_PATH
+              value: /go/src/github.com/skyerus/riptides-go/config/google
+            - name: FORGOT_PASSWORD_TPL
+              value: /go/src/github.com/skyerus/riptides-go/assets/email/forgotPassword.html
+            - name: JWT_PATH
+              value: /go/src/github.com/skyerus/riptides-go/config/jwt
+            - name: TZ
+              value: Europe/London
           volumeMounts:
             - name: keys
-              mountPath: /app/config/jwt
+              mountPath: /go/src/github.com/skyerus/riptides-go/config/jwt
             - name: google
-              mountPath: /app/config/google
-        - name: "nginx-api-sha256"
-          image: "eu.gcr.io/riptides/nginx-api@sha256:00ce56ff9cd5a97cc3621b0b38fe02157b79c74eaf16248f68774f24cecef3cb"
+              mountPath: /go/src/github.com/skyerus/riptides-go/config/google
       volumes:
         - name: keys
           secret:
-            secretName: riptides-api-keys
+            secretName: riptides-go-keys
             items:
-            - key: private.pem
-              path: private.pem
-            - key: public.pem
-              path: public.pem
+            - key: private.key
+              path: private.key
+            - key: public.key
+              path: public.key
         - name: google
           secret:
             secretName: storage-service-credentials

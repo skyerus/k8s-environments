@@ -54,9 +54,9 @@ spec:
       volumes:
         - name: keys
           secret:
-            secretName: riptides-api-keys
+            secretName: riptides-go-keys
             items:
-              - key: public.pem
+              - key: public.key
                 path: public.pem
 ---
 apiVersion: "autoscaling/v2beta1"
